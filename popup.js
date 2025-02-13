@@ -1,4 +1,4 @@
-const API_KEY = 'Dqa6NVB3wtarl5hNrI9tsbSt97GW0BGe';
+const API_KEY = 'your_api_url';
 const API_URL = "https://api.mistral.ai/v1/chat/completions";
 
 async function getCurrentTab() {
