@@ -16,7 +16,7 @@ A powerful Chrome extension that helps you summarize articles using AI. This ext
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/smart-brief-extension.git
+[git clone https://github.com/yourusername/smart-brief-extension.git](https://github.com/chandankumarm55/SmartBrief-chromeextension.git)
 cd smart-brief-extension
 ```
 
@@ -127,12 +127,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Thanks to Mistral AI for providing the summarization API
 - Icon credits: Material Icons by Google
 
-## Support
 
-If you encounter any issues or have questions, please:
-1. Check the [Issues](https://github.com/yourusername/smart-brief-extension/issues) section
-2. Create a new issue if your problem isn't already listed
-
----
-
-**Note**: Replace `yourusername` in the repository URLs with your actual GitHub username.
