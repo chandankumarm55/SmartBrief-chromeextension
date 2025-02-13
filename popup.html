@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Summarizer Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Add Google Fonts for different scripts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Sans+Bengali&family=Noto+Sans+Devanagari&family=Noto+Sans+Gujarati&family=Noto+Sans+Kannada&family=Noto+Sans+Malayalam&family=Noto+Sans+Tamil&family=Noto+Sans+Telugu&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Article Summarizer Pro</h2>
+            <div class="settings">
+                <select id="language-select" class="select-style">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी (Hindi)</option>
+                    <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                    <option value="ta">தமிழ் (Tamil)</option>
+                    <option value="te">తెలుగు (Telugu)</option>
+                    <option value="ml">മലയാളം (Malayalam)</option>
+                    <option value="bn">বাংলা (Bengali)</option>
+                    <option value="gu">ગુજરાતી (Gujarati)</option>
+                    <option value="mr">मराठी (Marathi)</option>
+                    <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+                    <option value="es">Español (Spanish)</option>
+                    <option value="fr">Français (French)</option>
+                    <option value="de">Deutsch (German)</option>
+                    <option value="it">Italiano (Italian)</option>
+                    <option value="pt">Português (Portuguese)</option>
+                    <option value="ru">Русский (Russian)</option>
+                    <option value="ja">日本語 (Japanese)</option>
+                    <option value="ko">한국어 (Korean)</option>
+                    <option value="zh">中文 (Chinese)</option>
+                </select>
+                <select id="summary-length" class="select-style">
+                    <option value="short">Short Summary</option>
+                    <option value="medium">Medium Summary</option>
+                    <option value="long">Detailed Summary</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="loading-spinner" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Analyzing article...</p>
+            </div>
+
+            <div id="summary-container">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="summary">Summary</button>
+                    <button class="tab-btn" data-tab="key-points">Key Points</button>
+                    <button class="tab-btn" data-tab="notes">My Notes</button>
+                </div>
+
+                <div class="tab-content active" id="summary-tab">
+                    <div class="summary-box">
+                        <h3>Summary</h3>
+                        <p id="summary-text">Click 'Summarize' to analyze the current article.</p>
+                        <div class="actions">
+                            <button id="copy-summary" class="icon-btn">Copy</button>
+                            <button id="share-summary" class="icon-btn"> Share</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="key-points-tab">
+                    <div class="recommendations-box">
+                        <h3>Key Points & Recommendations</h3>
+                        <ul id="recommendations-list"></ul>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="notes-tab">
+                    <div class="notes-box">
+                        <h3>My Notes</h3>
+                        <textarea id="user-notes" placeholder="Add your notes here..."></textarea>
+                        <button id="save-notes" class="button">Save Notes</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="summarize-btn" class="button primary">Summarize Article</button>
+                <div class="secondary-controls">
+                    <button id="download-pdf" class="button secondary">Save as PDF</button>
+                    <button id="history-btn" class="button secondary"> History</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="history-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h3>Summary History</h3>
+                <div id="history-list"></div>
+                <button class="button" onclick="document.getElementById('history-modal').style.display='none'">Close</button>
+            </div>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+
+</html>
