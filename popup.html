@@ -9,14 +9,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Add Google Fonts for different scripts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Sans+Bengali&family=Noto+Sans+Devanagari&family=Noto+Sans+Gujarati&family=Noto+Sans+Kannada&family=Noto+Sans+Malayalam&family=Noto+Sans+Tamil&family=Noto+Sans+Telugu&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&family=Noto+Sans+Bengali&family=Noto+Sans+Devanagari&family=Noto+Sans+Gujarati&family=Noto+Sans+Kannada&family=Noto+Sans+Malayalam&family=Noto+Sans+Tamil&family=Noto+Sans+Telugu&display=swap"
         rel="stylesheet">
 </head>
 
 <body>
     <div class="container">
+        <div class="header-controls">
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                <span class="material-icons light-icon">light_mode</span>
+                <span class="material-icons dark-icon">dark_mode</span>
+            </button>
+            <button id="close-btn" class="close-button">×</button>
+        </div>
         <div class="header">
-            <h2>Article Summarizer Pro</h2>
+            <h2>Smart Brief</h2>
+
             <div class="settings">
                 <select id="language-select" class="select-style">
                     <option value="en">English</option>
@@ -57,7 +66,7 @@
                 <div class="tabs">
                     <button class="tab-btn active" data-tab="summary">Summary</button>
                     <button class="tab-btn" data-tab="key-points">Key Points</button>
-                    <button class="tab-btn" data-tab="notes">My Notes</button>
+
                 </div>
 
                 <div class="tab-content active" id="summary-tab">
@@ -78,13 +87,7 @@
                     </div>
                 </div>
 
-                <div class="tab-content" id="notes-tab">
-                    <div class="notes-box">
-                        <h3>My Notes</h3>
-                        <textarea id="user-notes" placeholder="Add your notes here..."></textarea>
-                        <button id="save-notes" class="button">Save Notes</button>
-                    </div>
-                </div>
+
             </div>
 
             <div class="controls">
@@ -100,7 +103,8 @@
             <div class="modal-content">
                 <h3>Summary History</h3>
                 <div id="history-list"></div>
-                <button class="button" onclick="document.getElementById('history-modal').style.display='none'">Close</button>
+                <button class="button"
+                    onclick="document.getElementById('history-modal').style.display='none'">Close</button>
             </div>
         </div>
     </div>
