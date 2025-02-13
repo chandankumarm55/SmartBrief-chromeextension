@@ -1,4 +1,4 @@
-const API_KEY = 'your_api_url';
+const API_KEY = 'your_mistral_api_key';
 const API_URL = "https://api.mistral.ai/v1/chat/completions";
 
 async function getCurrentTab() {
@@ -251,7 +251,7 @@ class SummaryManager {
 
         const systemPrompt = `You are a helpful assistant that summarizes articles. ${lengthPrompts[this.summaryLength]} Respond in ${this.currentLanguage} language.`;
 
-        // ... (rest of the summarization logic) ...
+
     }
 
     switchTab(tabName) {
@@ -389,3 +389,205 @@ function handleLanguageChange() {
 document.addEventListener('DOMContentLoaded', () => {
     handleLanguageChange();
 });
+
+
+//for closing the extension 
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Close button functionality
+    const closeButton = document.getElementById('close-btn');
+    closeButton.addEventListener('click', function() {
+        window.close();
+    });
+
+    // Tab switching functionality
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove active class from all buttons and contents
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Add active class to clicked button and corresponding content
+            button.classList.add('active');
+            const tabId = button.getAttribute('data-tab');
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+        });
+    });
+
+    // Summarize button functionality
+    const summarizeBtn = document.getElementById('summarize-btn');
+    const loadingSpinner = document.getElementById('loading');
+    const summaryText = document.getElementById('summary-text');
+    const recommendationsList = document.getElementById('recommendations-list');
+
+    summarizeBtn.addEventListener('click', async() => {
+        loadingSpinner.style.display = 'flex';
+
+        try {
+            // Get the selected language and summary length
+            const language = document.getElementById('language-select').value;
+            const summaryLength = document.getElementById('summary-length').value;
+
+            // Get the current tab's content
+            chrome.tabs.query({ active: true, currentWindow: true }, async function(tabs) {
+                const tab = tabs[0];
+
+                // Send message to content script to get page content
+                chrome.tabs.sendMessage(tab.id, { action: "getContent" }, async function(response) {
+                    if (response && response.content) {
+                        // Simulate API call with timeout
+                        setTimeout(() => {
+                            // Update summary
+                            summaryText.textContent = "This is a sample summary of the article...";
+
+                            // Update recommendations
+                            recommendationsList.innerHTML = `
+                                <li>Key point 1</li>
+                                <li>Key point 2</li>
+                                <li>Key point 3</li>
+                            `;
+
+                            loadingSpinner.style.display = 'none';
+
+                            // Save to history
+                            saveToHistory({
+                                url: tab.url,
+                                title: tab.title,
+                                summary: summaryText.textContent,
+                                date: new Date().toISOString()
+                            });
+                        }, 1500);
+                    }
+                });
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            loadingSpinner.style.display = 'none';
+            summaryText.textContent = 'Error generating summary. Please try again.';
+        }
+    });
+
+    // Copy summary functionality
+    const copyButton = document.getElementById('copy-summary');
+    copyButton.addEventListener('click', () => {
+        const summaryText = document.getElementById('summary-text').textContent;
+        navigator.clipboard.writeText(summaryText)
+            .then(() => {
+                copyButton.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyButton.textContent = 'Copy';
+                }, 2000);
+            })
+            .catch(err => {
+                console.error('Failed to copy text:', err);
+            });
+    });
+
+    // Share functionality
+    const shareButton = document.getElementById('share-summary');
+    shareButton.addEventListener('click', () => {
+        const summaryText = document.getElementById('summary-text').textContent;
+        if (navigator.share) {
+            navigator.share({
+                title: 'Article Summary',
+                text: summaryText
+            }).catch(err => {
+                console.error('Error sharing:', err);
+            });
+        } else {
+            alert('Share functionality is not supported in this browser');
+        }
+    });
+
+    // Save notes functionality
+    const saveNotesButton = document.getElementById('save-notes');
+    const userNotes = document.getElementById('user-notes');
+
+    saveNotesButton.addEventListener('click', () => {
+        const notes = userNotes.value;
+        chrome.storage.local.set({ 'userNotes': notes }, function() {
+            saveNotesButton.textContent = 'Saved!';
+            setTimeout(() => {
+                saveNotesButton.textContent = 'Save Notes';
+            }, 2000);
+        });
+    });
+
+    // History functionality
+    const historyBtn = document.getElementById('history-btn');
+    const historyModal = document.getElementById('history-modal');
+    const historyList = document.getElementById('history-list');
+
+    historyBtn.addEventListener('click', () => {
+        historyModal.style.display = 'block';
+        displayHistory();
+    });
+
+    // Download PDF functionality
+    const downloadPdfButton = document.getElementById('download-pdf');
+    downloadPdfButton.addEventListener('click', () => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        const summary = document.getElementById('summary-text').textContent;
+        const notes = document.getElementById('user-notes').value;
+
+        doc.text('Article Summary', 20, 20);
+        doc.text(summary, 20, 30);
+
+        if (notes) {
+            doc.text('Notes:', 20, 90);
+            doc.text(notes, 20, 100);
+        }
+
+        doc.save('article-summary.pdf');
+    });
+
+    // Helper function to save to history
+    function saveToHistory(data) {
+        chrome.storage.local.get(['summaryHistory'], function(result) {
+            let history = result.summaryHistory || [];
+            history.unshift(data);
+            // Keep only last 10 items
+            history = history.slice(0, 10);
+            chrome.storage.local.set({ 'summaryHistory': history });
+        });
+    }
+
+    // Helper function to display history
+    function displayHistory() {
+        chrome.storage.local.get(['summaryHistory'], function(result) {
+            const history = result.summaryHistory || [];
+            historyList.innerHTML = history.map(item => `
+                <div class="history-item">
+                    <h4>${item.title}</h4>
+                    <p>${new Date(item.date).toLocaleDateString()}</p>
+                    <p>${item.summary.substring(0, 100)}...</p>
+                </div>
+            `).join('');
+        });
+    }
+});
+
+
+// Theme toggle functionality
+const themeToggle = document.getElementById('theme-toggle');
+const body = document.body;
+
+// Check for saved theme preference
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+    body.classList.add('dark-theme');
+}
+
+// Toggle theme
+themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-theme');
+    const isDark = body.classList.contains('dark-theme');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+});
+
+// Add this to your existing popup.js
