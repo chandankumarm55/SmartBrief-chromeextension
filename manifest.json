@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Article Summarizer",
+    "name": "Smart Brief",
     "version": "1.0",
     "description": "AI-powered article summarizer using Mistral AI",
     "permissions": [
